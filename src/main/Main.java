@@ -2,6 +2,8 @@ package main;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -26,6 +28,8 @@ public class Main {
 	/*
 	 * TODO Investigate jaudiotagger warnings
 	 * TODO delete tmp and goutputstream files
+	 * TODO add Timer
+	 * TODO add optional LoadingThread
 	 * TODO Fix any folders which contain multiple albums
 	 * TODO Embed jpg files which correspond to albums where the art isn't embedded
 	 * TODO Delete jpg files which correspond to albums where the art IS embedded
@@ -33,10 +37,13 @@ public class Main {
 	 * TODO design Album and AlbumBag classes
 	 * TODO check for albums with inconsistent artwork/location/artist/genre/
 	 * TODO clean up messy song/album titles
+	 * TODO consolidate artists who have more than one genre, excluding the Bootlegs genre
 	 */
 	
 	private static void runTagBot(){
 		File rootDirectory = FileTools.selectSavedDirectory("Select MP3 Directory",  "cfg/mp3directory.cfg");
+		
+		Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
 		
 		traverseDirectory(rootDirectory.listFiles());
 	}
@@ -66,15 +73,7 @@ public class Main {
 		AudioFile mySong = null;
 		Tag audioTag = null;
 		
-		try {
-			mySong = AudioFileIO.read(myFile);
-		} catch (CannotReadException | IOException | TagException
-				| ReadOnlyFileException | InvalidAudioFrameException e) {
-			if(!e.getMessage().equals(mLastErrorString)){
-				mLastErrorString = e.getMessage();
-				System.out.println(mLastErrorString + " " + myFile.getAbsolutePath());
-			}
-		}
+		deleteNonReadableNonJPGFiles(myFile, mySong, false);
 		
 		//audioTag = mySong.getTag();
 		//System.out.println(audioTag.getFirst(FieldKey.ALBUM));
@@ -82,6 +81,21 @@ public class Main {
 	
 	private static void doStuffFolder(File myFolder){
 		//Do nothing for now
+	}
+	
+	private static void deleteNonReadableNonJPGFiles(File myFile, AudioFile mySong, boolean commitChanges){
+		try {
+			mySong = AudioFileIO.read(myFile);
+		} catch (CannotReadException | IOException | TagException
+				| ReadOnlyFileException | InvalidAudioFrameException e) {
+			//Display the non-readable files that aren't jpg images
+			if(!myFile.getAbsolutePath().endsWith(".jpg")){
+				System.out.println(mLastErrorString + " " + myFile.getAbsolutePath());
+				if(commitChanges){
+					myFile.delete();
+				}
+			}
+		}
 	}
 
 }
