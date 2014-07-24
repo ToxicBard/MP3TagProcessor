@@ -8,9 +8,12 @@ import java.util.logging.Logger;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
@@ -33,11 +36,12 @@ public class Main {
 	 * 		provided id tag field.  It should also display 
 	 * 		the old/new values and have a parameter saying 
 	 * 		whether to actually write the new tags.
+	 * TODO Implement writing of process info to a file, rather than the console
 	 * TODO clean up messy song/album titles and genres
 	 * 
 	 * TODO Fix any folders which contain multiple albums
 	 * TODO design Album and AlbumBag classes
-	 * TODO check for albums with inconsistent artwork/location/artist/genre/
+	 * TODO check for albums with inconsistent year/artwork/location/artist/genre/
 	 * TODO consolidate artists who have more than one genre, excluding the Bootlegs genre
 	 * 
 	 * TODO Embed jpg files which correspond to albums where the art isn't embedded
@@ -103,11 +107,11 @@ public class Main {
 	}
 	
 	private static void openFile(File myFile){
-		AudioFile mySong = null;
+		AudioFile myAudioFile = null;
 		
 		try {
-			mySong = AudioFileIO.read(myFile);
-			doStuffSong(mySong);
+			myAudioFile = AudioFileIO.read(myFile);
+			doStuffSong(myAudioFile);
 		} catch (CannotReadException | IOException | TagException
 				| ReadOnlyFileException | InvalidAudioFrameException e) {
 			/*
@@ -130,14 +134,37 @@ public class Main {
 	/*
 	 * This should get called for every valid audio file
 	 */
-	private static void doStuffSong(AudioFile mySong){
+	private static void doStuffSong(AudioFile myAudioFile){
 		//Do nothing for now
-		/*
-		Tag audioTag = null;
 		
-		audioTag = mySong.getTag();
-		System.out.println(audioTag.getFirst(FieldKey.ALBUM));
-		*/
+		//Tag audioTag = null;
+		
+		//audioTag = myAudioFile.getTag();
+		//System.out.println(audioTag.getFirst(FieldKey.ALBUM));
+		
+		findReplaceTag(myAudioFile, FieldKey.ALBUM, "(Parental Advisory)", "", false);
+		
+	}
+	
+	private static void findReplaceTag(AudioFile myAudioFile, FieldKey tagKey, String findString, String replaceString, boolean commit){
+		Tag tag = myAudioFile.getTag();
+		String currentTag = tag.getFirst(tagKey);
+		String newTag = null;
+		
+		if(currentTag.contains(findString)){
+			newTag = currentTag.replace(findString, replaceString);
+			System.out.println(currentTag + ", " + newTag);
+			
+			//Only write if specified.  Otherwise we run in a read-only mode to check the comparison before writing changes.
+			if(commit){
+				try {
+					tag.setField(tagKey, newTag);
+					myAudioFile.commit();
+				} catch (KeyNotFoundException | FieldDataInvalidException | CannotWriteException e) {
+					CommonTools.processError("Error writing tag for " + currentTag);
+				}
+			}
+		}
 	}
 	
 	private static void doStuffFolder(File myFolder){
