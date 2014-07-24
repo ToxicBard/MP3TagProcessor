@@ -16,36 +16,69 @@ import org.jaudiotagger.tag.TagException;
 
 import commonTools.CommonTools;
 import commonTools.FileTools;
+import commonTools.LoadingThread;
+import commonTools.Timer;
 
 public class Main {
 	
-	private static String mLastErrorString = "";
+	private static final boolean mShowBusyDisplay = false;
+	private static final boolean mEnableLogging = false;
 	
 	public static void main(String[] args) {
-		runTagBot();
+		runTagBot(mShowBusyDisplay, mEnableLogging);
 	}
 	
 	/*
-	 * TODO Investigate jaudiotagger warnings
-	 * TODO delete tmp and goutputstream files
-	 * TODO add Timer
-	 * TODO add optional LoadingThread
+	 * TODO Write a find/replace function that works for a 
+	 * 		provided id tag field.  It should also display 
+	 * 		the old/new values and have a parameter saying 
+	 * 		whether to actually write the new tags.
+	 * TODO clean up messy song/album titles and genres
+	 * 
 	 * TODO Fix any folders which contain multiple albums
-	 * TODO Embed jpg files which correspond to albums where the art isn't embedded
-	 * TODO Delete jpg files which correspond to albums where the art IS embedded
-	 * TODO check for any other remaining files which can't be opened for tagging and process accordingly
 	 * TODO design Album and AlbumBag classes
 	 * TODO check for albums with inconsistent artwork/location/artist/genre/
-	 * TODO clean up messy song/album titles
 	 * TODO consolidate artists who have more than one genre, excluding the Bootlegs genre
+	 * 
+	 * TODO Embed jpg files which correspond to albums where the art isn't embedded
+	 * TODO Delete jpg files which correspond to albums where the art IS embedded
+	 * TODO Investigate jaudiotagger warnings
 	 */
 	
-	private static void runTagBot(){
-		File rootDirectory = FileTools.selectSavedDirectory("Select MP3 Directory",  "cfg/mp3directory.cfg");
+	private static void runTagBot(boolean showBusyDisplay, boolean enableLogging){
+		LoadingThread busyDisplay = new LoadingThread();
+		Timer botTimer = new Timer();
+		File rootDirectory = null;
+
+		//Start counting the time taken to iterate
+		botTimer.start();
 		
-		Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
+		rootDirectory = FileTools.selectSavedDirectory("Select MP3 Directory",  "cfg/mp3directory.cfg");
 		
+		if(!enableLogging){
+			Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
+		}
+		
+		//Start the busy display if it was specified
+		if(showBusyDisplay){
+			busyDisplay.start();
+		}
+		
+		/*
+		 * Traverse the directory structure doing things
+		 * per each file and folder
+		 */
 		traverseDirectory(rootDirectory.listFiles());
+		
+		//Stop the busy display if it's running
+		if(busyDisplay.isRunning()){
+			busyDisplay.stopRunning();
+		}
+		
+		//Stop the iteration timer
+		botTimer.stop();
+		
+		System.out.println(botTimer.getElapsedIntervalString());
 	}
 	
 	/*
@@ -56,7 +89,7 @@ public class Main {
 		for(File loopFile : myFiles){
 			
 			if(loopFile.isFile()){
-				doStuffFile(loopFile);
+				openFile(loopFile);
 			}
 			
 			if(loopFile.isDirectory()){
@@ -69,33 +102,46 @@ public class Main {
 		}
 	}
 	
-	private static void doStuffFile(File myFile){
+	private static void openFile(File myFile){
 		AudioFile mySong = null;
+		
+		try {
+			mySong = AudioFileIO.read(myFile);
+			doStuffSong(mySong);
+		} catch (CannotReadException | IOException | TagException
+				| ReadOnlyFileException | InvalidAudioFrameException e) {
+			/*
+			 * If a file can't be read as an audio file, then
+			 * check to see if it's a *.jpg file.
+			 * -If it's not a jpg, then crash because this needs to
+			 * be handled on a case-by-case basis
+			 * -If it is a jpg, then continue silently.  I'll go 
+			 * through and embed/delete where relevant in the future,
+			 * but they're not hurting anything in the meantime
+			 */
+			if(!myFile.getAbsolutePath().endsWith(".jpg")){
+				CommonTools.processError("File isn't a *.jpg and can't be opened as an audio file: " + myFile.getAbsolutePath());
+				//System.out.println(myFile.getAbsolutePath());
+				//myFile.delete();
+			}
+		}
+	}
+	
+	/*
+	 * This should get called for every valid audio file
+	 */
+	private static void doStuffSong(AudioFile mySong){
+		//Do nothing for now
+		/*
 		Tag audioTag = null;
 		
-		deleteNonReadableNonJPGFiles(myFile, mySong, false);
-		
-		//audioTag = mySong.getTag();
-		//System.out.println(audioTag.getFirst(FieldKey.ALBUM));
+		audioTag = mySong.getTag();
+		System.out.println(audioTag.getFirst(FieldKey.ALBUM));
+		*/
 	}
 	
 	private static void doStuffFolder(File myFolder){
 		//Do nothing for now
-	}
-	
-	private static void deleteNonReadableNonJPGFiles(File myFile, AudioFile mySong, boolean commitChanges){
-		try {
-			mySong = AudioFileIO.read(myFile);
-		} catch (CannotReadException | IOException | TagException
-				| ReadOnlyFileException | InvalidAudioFrameException e) {
-			//Display the non-readable files that aren't jpg images
-			if(!myFile.getAbsolutePath().endsWith(".jpg")){
-				System.out.println(mLastErrorString + " " + myFile.getAbsolutePath());
-				if(commitChanges){
-					myFile.delete();
-				}
-			}
-		}
 	}
 
 }
