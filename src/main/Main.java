@@ -32,12 +32,8 @@ public class Main {
 	}
 	
 	/*
-	 * TODO Write a find/replace function that works for a 
-	 * 		provided id tag field.  It should also display 
-	 * 		the old/new values and have a parameter saying 
-	 * 		whether to actually write the new tags.
-	 * TODO Implement writing of process info to a file, rather than the console
 	 * TODO clean up messy song/album titles and genres
+	 * TODO Implement writing of process info to a file, rather than the console
 	 * 
 	 * TODO Fix any folders which contain multiple albums
 	 * TODO design Album and AlbumBag classes
