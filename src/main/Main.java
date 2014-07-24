@@ -131,14 +131,19 @@ public class Main {
 	 * This should get called for every valid audio file
 	 */
 	private static void doStuffSong(AudioFile myAudioFile){
-		//Do nothing for now
-		
 		//Tag audioTag = null;
 		
 		//audioTag = myAudioFile.getTag();
 		//System.out.println(audioTag.getFirst(FieldKey.ALBUM));
+
 		
-		findReplaceTag(myAudioFile, FieldKey.ALBUM, "(Parental Advisory)", "", false);
+		findReplaceTag(myAudioFile, FieldKey.GENRE, "60s Rock (done)", "60s Rock |", true);
+		findReplaceTag(myAudioFile, FieldKey.GENRE, "70s Hard Rock / Metal (Done)", "70s Hard Rock / Metal |", true);
+		findReplaceTag(myAudioFile, FieldKey.GENRE, "70s Hard Rock/Metal (done)", "70s Hard Rock / Metal |", true);
+		findReplaceTag(myAudioFile, FieldKey.GENRE, "70s Metal (done)", "70s Hard Rock / Metal |", true);
+		findReplaceTag(myAudioFile, FieldKey.GENRE, "80s Metal (Done)", "80s Metal |", true);
+		findReplaceTag(myAudioFile, FieldKey.GENRE, "90s Alternative (Done)", "90s Music |", true);
+		findReplaceTag(myAudioFile, FieldKey.GENRE, "90s Music (Done)", "90s Music |", true);
 		
 	}
 	
