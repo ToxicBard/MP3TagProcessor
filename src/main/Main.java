@@ -55,7 +55,7 @@ public class Main {
 		
 		rootDirectory = FileTools.selectSavedDirectory("Select MP3 Directory",  "cfg/mp3directory.cfg");
 		
-		if(!enableLogging){
+		if(enableLogging == false){
 			Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
 		}
 		
@@ -137,13 +137,13 @@ public class Main {
 		//System.out.println(audioTag.getFirst(FieldKey.ALBUM));
 
 		
-		findReplaceTag(myAudioFile, FieldKey.GENRE, "60s Rock (done)", "60s Rock |", true);
-		findReplaceTag(myAudioFile, FieldKey.GENRE, "70s Hard Rock / Metal (Done)", "70s Hard Rock / Metal |", true);
-		findReplaceTag(myAudioFile, FieldKey.GENRE, "70s Hard Rock/Metal (done)", "70s Hard Rock / Metal |", true);
+		findReplaceTag(myAudioFile, FieldKey.GENRE, "60s Rock (Done)", "60s Rock |", true);
+		findReplaceTag(myAudioFile, FieldKey.GENRE, "70s Hard Rock/Metal (Done)", "70s Hard Rock / Metal |", true);
 		findReplaceTag(myAudioFile, FieldKey.GENRE, "70s Metal (done)", "70s Hard Rock / Metal |", true);
+		findReplaceTag(myAudioFile, FieldKey.GENRE, "80s Metal (done)", "80s Metal |", true);
 		findReplaceTag(myAudioFile, FieldKey.GENRE, "80s Metal (Done)", "80s Metal |", true);
-		findReplaceTag(myAudioFile, FieldKey.GENRE, "90s Alternative (Done)", "90s Music |", true);
-		findReplaceTag(myAudioFile, FieldKey.GENRE, "90s Music (Done)", "90s Music |", true);
+		findReplaceTag(myAudioFile, FieldKey.GENRE, "90s Alternative (done)", "90s Music |", true);
+		findReplaceTag(myAudioFile, FieldKey.GENRE, "90s Music (done)", "90s Music |", true);
 		
 	}
 	
