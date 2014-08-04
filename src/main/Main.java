@@ -132,26 +132,24 @@ public class Main {
 	 */
 	private static void doStuffSong(AudioFile myAudioFile){
 
-		/*
-		findReplaceTag(myAudioFile, FieldKey.GENRE, "60s Rock (Done)", "60s Rock |", true);
-		findReplaceTag(myAudioFile, FieldKey.GENRE, "70s Hard Rock/Metal (Done)", "70s Hard Rock / Metal |", true);
-		findReplaceTag(myAudioFile, FieldKey.GENRE, "70s Metal (done)", "70s Hard Rock / Metal |", true);
-		findReplaceTag(myAudioFile, FieldKey.GENRE, "80s Metal (done)", "80s Metal |", true);
-		findReplaceTag(myAudioFile, FieldKey.GENRE, "80s Metal (Done)", "80s Metal |", true);
-		findReplaceTag(myAudioFile, FieldKey.GENRE, "90s Alternative (done)", "90s Music |", true);
-		findReplaceTag(myAudioFile, FieldKey.GENRE, "90s Music (done)", "90s Music |", true);
-		*/
+		trimTag(myAudioFile, FieldKey.GENRE, true);
+		findReplaceTag(myAudioFile, FieldKey.GENRE, "60s Rock (Done)", "60s Rock |", false, true);
 		
-		trimTag(myAudioFile, FieldKey.TITLE, true);
 	}
 	
-	private static void findReplaceTag(AudioFile myAudioFile, FieldKey tagKey, String findString, String replaceString, boolean commit){
+	private static void findReplaceTag(AudioFile myAudioFile, FieldKey tagKey, String findString, String replaceString, boolean useRegex, boolean commit){
 		Tag tag = myAudioFile.getTag();
 		String currentTag = tag.getFirst(tagKey);
 		String newTag = null;
 		
-		if(currentTag.contains(findString)){
+		if(useRegex){
+			newTag = currentTag.replaceFirst(findString, replaceString);
+		}
+		else {
 			newTag = currentTag.replace(findString, replaceString);
+		}
+		
+		if(!currentTag.equals(newTag)){
 			System.out.println(currentTag + ", " + newTag);
 			
 			//Only write if specified.  Otherwise we run in a read-only mode to check the comparison before writing changes.
