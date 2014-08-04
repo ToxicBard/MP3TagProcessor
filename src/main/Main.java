@@ -141,8 +141,8 @@ public class Main {
 		findReplaceTag(myAudioFile, FieldKey.GENRE, "90s Alternative (done)", "90s Music |", true);
 		findReplaceTag(myAudioFile, FieldKey.GENRE, "90s Music (done)", "90s Music |", true);
 		*/
-
-		findReplaceTag(myAudioFile, FieldKey.TITLE, "(Lp Version)", "", true);
+		
+		trimTag(myAudioFile, FieldKey.TITLE, true);
 	}
 	
 	private static void findReplaceTag(AudioFile myAudioFile, FieldKey tagKey, String findString, String replaceString, boolean commit){
@@ -152,6 +152,27 @@ public class Main {
 		
 		if(currentTag.contains(findString)){
 			newTag = currentTag.replace(findString, replaceString);
+			System.out.println(currentTag + ", " + newTag);
+			
+			//Only write if specified.  Otherwise we run in a read-only mode to check the comparison before writing changes.
+			if(commit){
+				try {
+					tag.setField(tagKey, newTag);
+					myAudioFile.commit();
+				} catch (KeyNotFoundException | FieldDataInvalidException | CannotWriteException e) {
+					CommonTools.processError("Error writing tag for " + currentTag);
+				}
+			}
+		}
+	}
+	
+	private static void trimTag(AudioFile myAudioFile, FieldKey tagKey, boolean commit){
+		Tag tag = myAudioFile.getTag();
+		String currentTag = tag.getFirst(tagKey);
+		String newTag = null;
+		
+		if(!currentTag.trim().equals(currentTag)){
+			newTag = currentTag.trim();
 			System.out.println(currentTag + ", " + newTag);
 			
 			//Only write if specified.  Otherwise we run in a read-only mode to check the comparison before writing changes.
