@@ -131,12 +131,8 @@ public class Main {
 	 * This should get called for every valid audio file
 	 */
 	private static void doStuffSong(AudioFile myAudioFile){
-		//Tag audioTag = null;
-		
-		//audioTag = myAudioFile.getTag();
-		//System.out.println(audioTag.getFirst(FieldKey.ALBUM));
 
-		
+		/*
 		findReplaceTag(myAudioFile, FieldKey.GENRE, "60s Rock (Done)", "60s Rock |", true);
 		findReplaceTag(myAudioFile, FieldKey.GENRE, "70s Hard Rock/Metal (Done)", "70s Hard Rock / Metal |", true);
 		findReplaceTag(myAudioFile, FieldKey.GENRE, "70s Metal (done)", "70s Hard Rock / Metal |", true);
@@ -144,7 +140,9 @@ public class Main {
 		findReplaceTag(myAudioFile, FieldKey.GENRE, "80s Metal (Done)", "80s Metal |", true);
 		findReplaceTag(myAudioFile, FieldKey.GENRE, "90s Alternative (done)", "90s Music |", true);
 		findReplaceTag(myAudioFile, FieldKey.GENRE, "90s Music (done)", "90s Music |", true);
-		
+		*/
+
+		findReplaceTag(myAudioFile, FieldKey.TITLE, "(Lp Version)", "", true);
 	}
 	
 	private static void findReplaceTag(AudioFile myAudioFile, FieldKey tagKey, String findString, String replaceString, boolean commit){
