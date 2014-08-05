@@ -36,7 +36,7 @@ public class Main {
 	 * TODO Implement writing of process info to a file, rather than the console
 	 * 
 	 * TODO Fix any folders which contain multiple albums
-	 * TODO design Album and AlbumBag classes
+	 * TODO write Song, Album, and AlbumBag classes
 	 * TODO check for albums with inconsistent year/artwork/location/artist/genre/
 	 * TODO consolidate artists who have more than one genre, excluding the Bootlegs genre
 	 * 
@@ -57,6 +57,7 @@ public class Main {
 		
 		if(enableLogging == false){
 			Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
+			System.out.println("Disabling jaudiotagger logging");
 		}
 		
 		//Start the busy display if it was specified
@@ -133,11 +134,14 @@ public class Main {
 	private static void doStuffSong(AudioFile myAudioFile){
 
 		trimTag(myAudioFile, FieldKey.GENRE, true);
-		findReplaceTag(myAudioFile, FieldKey.GENRE, "60s Rock (Done)", "60s Rock |", false, true);
+		findReplaceTag(myAudioFile, FieldKey.GENRE, "(Done)", "|", false, false, true);
+		findReplaceTag(myAudioFile, FieldKey.GENRE, "(done)", "|", false, false, true);
 		
 	}
 	
-	private static void findReplaceTag(AudioFile myAudioFile, FieldKey tagKey, String findString, String replaceString, boolean useRegex, boolean commit){
+	private static void findReplaceTag(AudioFile myAudioFile, FieldKey tagKey, 
+			String findString, String replaceString, boolean exactMatchOnly, 
+			boolean useRegex, boolean commit){
 		Tag tag = myAudioFile.getTag();
 		String currentTag = tag.getFirst(tagKey);
 		String newTag = null;
@@ -149,7 +153,7 @@ public class Main {
 			newTag = currentTag.replace(findString, replaceString);
 		}
 		
-		if(!currentTag.equals(newTag)){
+		if(currentTag.equals(newTag)==false && (exactMatchOnly == false || currentTag.equals(findString))){
 			System.out.println(currentTag + ", " + newTag);
 			
 			//Only write if specified.  Otherwise we run in a read-only mode to check the comparison before writing changes.
