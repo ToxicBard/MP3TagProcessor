@@ -29,26 +29,16 @@ public class Song {
 	 * -Add a function to count the number of instances of a particular tag
 	 */
 	
-	/*
-	 * TODO Add get methods for common tags such as artist, title, album, genre, track, year
-	 * TODO Update existing functions to use those get methods, rather than reading the tag directly
-	 */
-	
-	public void findReplaceTag(FieldKey tagKey, String findString, 
-			String replaceString, boolean exactMatchOnly, 
-			boolean useRegex, boolean commit){
+	public String findReplaceTag(FieldKey tagKey, String findString, 
+			String replaceString, boolean exactMatchOnly, boolean commit){
 		String currentTag = mTag.getFirst(tagKey);
 		String newTag = null;
+		String toReturn = "";
 		
-		if(useRegex){
-			newTag = currentTag.replaceFirst(findString, replaceString);
-		}
-		else {
-			newTag = currentTag.replace(findString, replaceString);
-		}
+		newTag = currentTag.replace(findString, replaceString);
 		
 		if(currentTag.equals(newTag)==false && (exactMatchOnly == false || currentTag.equals(findString))){
-			System.out.println(currentTag + ", " + newTag);
+			toReturn = currentTag + ", " + newTag + "\n";
 			
 			//Only write if specified.  Otherwise we run in a read-only mode to check the comparison before writing changes.
 			if(commit){
@@ -60,15 +50,18 @@ public class Song {
 				}
 			}
 		}
+		
+		return toReturn;
 	}
 	
-	public void trimTag(FieldKey tagKey, boolean commit){
+	public String trimTag(FieldKey tagKey, boolean commit){
 		String currentTag = mTag.getFirst(tagKey);
 		String newTag = null;
+		String toReturn = "";
 		
 		if(!currentTag.trim().equals(currentTag)){
 			newTag = currentTag.trim();
-			System.out.println(currentTag + ", " + newTag);
+			toReturn = currentTag + ", " + newTag + "\n";
 			
 			//Only write if specified.  Otherwise we run in a read-only mode to check the comparison before writing changes.
 			if(commit){
@@ -80,6 +73,8 @@ public class Song {
 				}
 			}
 		}
+		
+		return toReturn;
 	}
 	
 	private List<String> getTags(FieldKey tagKey){
@@ -112,5 +107,29 @@ public class Song {
 	
 	public String getAbsolutePath(){
 		return mAudioFile.getFile().getAbsolutePath();
+	}
+	
+	public String getGenre(){
+		return mTag.getFirst(FieldKey.GENRE);
+	}
+	
+	public String getArtist(){
+		return mTag.getFirst(FieldKey.ARTIST);
+	}
+	
+	public String getAlbum(){
+		return mTag.getFirst(FieldKey.ALBUM);
+	}
+	
+	public String getTitle(){
+		return mTag.getFirst(FieldKey.TITLE);
+	}
+	
+	public String getTrack(){
+		return mTag.getFirst(FieldKey.TRACK);
+	}
+	
+	public String getYear(){
+		return mTag.getFirst(FieldKey.YEAR);
 	}
 }

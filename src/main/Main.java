@@ -1,5 +1,6 @@
 package main;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -26,10 +27,14 @@ import commonTools.Timer;
 public class Main {
 	
 	private static final boolean mShowBusyDisplay = false;
-	private static final boolean mEnableLogging = true;
+	private static final boolean mEnableLogging = false;
+	private static final boolean mWriteToFile = false;
 	
-	public static void main(String[] args) {
-		runTagBot(mShowBusyDisplay, mEnableLogging);
+	private static BufferedWriter mResultFile = null;
+	
+	
+	public static void main(String[] args) throws IOException {
+		runTagBot();
 	}
 	
 	/*
@@ -46,7 +51,7 @@ public class Main {
 	 * TODO Investigate jaudiotagger warnings
 	 */
 	
-	private static void runTagBot(boolean showBusyDisplay, boolean enableLogging){
+	private static void runTagBot() throws IOException{
 		LoadingThread busyDisplay = new LoadingThread();
 		Timer botTimer = new Timer();
 		File rootDirectory = null;
@@ -56,14 +61,19 @@ public class Main {
 		
 		rootDirectory = FileTools.selectSavedDirectory("Select MP3 Directory",  "cfg/mp3directory.cfg");
 		
-		if(enableLogging == false){
+		if(mEnableLogging == false){
 			Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
 			System.out.println("Disabling jaudiotagger logging");
 		}
 		
 		//Start the busy display if it was specified
-		if(showBusyDisplay){
+		if(mShowBusyDisplay){
 			busyDisplay.start();
+		}
+		
+		//Open the write file if we're writing to file rather than console
+		if(mWriteToFile){
+			mResultFile = FileTools.openWriteFile("out/taggerOut.txt");
 		}
 		
 		/*
@@ -79,6 +89,11 @@ public class Main {
 		
 		//Stop the iteration timer
 		botTimer.stop();
+		
+		//If the write file has been opened for writing, then close it here to save the changes
+		if(mResultFile != null){
+			mResultFile.close();
+		}
 		
 		System.out.println(botTimer.getElapsedIntervalString());
 	}
@@ -132,18 +147,19 @@ public class Main {
 	/*
 	 * This should get called for every valid audio file
 	 */
-	private static void doStuffSong(AudioFile myAudioFile){
-		
+	private static void doStuffSong(AudioFile myAudioFile) throws IOException{
+		String operationResult = null;
 		Song mySong = new Song(myAudioFile);
-		if(mySong.countTags(FieldKey.GENRE) > 1){
-			System.out.println(mySong.getAbsolutePath());
-			System.out.println(mySong.getTagListString(FieldKey.GENRE));
+		
+		operationResult = mySong.findReplaceTag(FieldKey.GENRE, "Done", "|", false, true);
+		operationResult += mySong.findReplaceTag(FieldKey.GENRE, "done", "|", false, true);
+		
+		if(mWriteToFile){
+			mResultFile.write(operationResult);
 		}
-		/*
-		trimTag(myAudioFile, FieldKey.GENRE, true);
-		findReplaceTag(myAudioFile, FieldKey.GENRE, "(Done)", "|", false, false, true);
-		findReplaceTag(myAudioFile, FieldKey.GENRE, "(done)", "|", false, false, true);
-		*/
+		else{
+			System.out.print(operationResult);
+		}
 	}
 	
 	private static void doStuffFolder(File myFolder){
