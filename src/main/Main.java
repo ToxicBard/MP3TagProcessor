@@ -17,6 +17,7 @@ import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
+import songStructures.Song;
 import commonTools.CommonTools;
 import commonTools.FileTools;
 import commonTools.LoadingThread;
@@ -25,7 +26,7 @@ import commonTools.Timer;
 public class Main {
 	
 	private static final boolean mShowBusyDisplay = false;
-	private static final boolean mEnableLogging = false;
+	private static final boolean mEnableLogging = true;
 	
 	public static void main(String[] args) {
 		runTagBot(mShowBusyDisplay, mEnableLogging);
@@ -132,61 +133,17 @@ public class Main {
 	 * This should get called for every valid audio file
 	 */
 	private static void doStuffSong(AudioFile myAudioFile){
-
+		
+		Song mySong = new Song(myAudioFile);
+		if(mySong.countTags(FieldKey.GENRE) > 1){
+			System.out.println(mySong.getAbsolutePath());
+			System.out.println(mySong.getTagListString(FieldKey.GENRE));
+		}
+		/*
 		trimTag(myAudioFile, FieldKey.GENRE, true);
 		findReplaceTag(myAudioFile, FieldKey.GENRE, "(Done)", "|", false, false, true);
 		findReplaceTag(myAudioFile, FieldKey.GENRE, "(done)", "|", false, false, true);
-		
-	}
-	
-	private static void findReplaceTag(AudioFile myAudioFile, FieldKey tagKey, 
-			String findString, String replaceString, boolean exactMatchOnly, 
-			boolean useRegex, boolean commit){
-		Tag tag = myAudioFile.getTag();
-		String currentTag = tag.getFirst(tagKey);
-		String newTag = null;
-		
-		if(useRegex){
-			newTag = currentTag.replaceFirst(findString, replaceString);
-		}
-		else {
-			newTag = currentTag.replace(findString, replaceString);
-		}
-		
-		if(currentTag.equals(newTag)==false && (exactMatchOnly == false || currentTag.equals(findString))){
-			System.out.println(currentTag + ", " + newTag);
-			
-			//Only write if specified.  Otherwise we run in a read-only mode to check the comparison before writing changes.
-			if(commit){
-				try {
-					tag.setField(tagKey, newTag);
-					myAudioFile.commit();
-				} catch (KeyNotFoundException | FieldDataInvalidException | CannotWriteException e) {
-					CommonTools.processError("Error writing tag for " + currentTag);
-				}
-			}
-		}
-	}
-	
-	private static void trimTag(AudioFile myAudioFile, FieldKey tagKey, boolean commit){
-		Tag tag = myAudioFile.getTag();
-		String currentTag = tag.getFirst(tagKey);
-		String newTag = null;
-		
-		if(!currentTag.trim().equals(currentTag)){
-			newTag = currentTag.trim();
-			System.out.println(currentTag + ", " + newTag);
-			
-			//Only write if specified.  Otherwise we run in a read-only mode to check the comparison before writing changes.
-			if(commit){
-				try {
-					tag.setField(tagKey, newTag);
-					myAudioFile.commit();
-				} catch (KeyNotFoundException | FieldDataInvalidException | CannotWriteException e) {
-					CommonTools.processError("Error writing tag for " + currentTag);
-				}
-			}
-		}
+		*/
 	}
 	
 	private static void doStuffFolder(File myFolder){
