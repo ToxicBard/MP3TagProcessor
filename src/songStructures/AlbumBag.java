@@ -20,7 +20,7 @@ public class AlbumBag implements Serializable {
 		for(int i = mAlbums.size()-1;i>=0;i--){
 			//If the new song album matches this iteration's
 			//album title, then add it.
-			if(mySong.getAlbum().equals(mAlbums.get(i).getAlbumTitle())){
+			if(mAlbums.get(i).songMatchesAlbum(mySong)){
 				mAlbums.get(i).addSong(mySong);
 				addedToExistingAlbum = true;
 				break;

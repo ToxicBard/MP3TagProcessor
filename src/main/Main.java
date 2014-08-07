@@ -53,6 +53,10 @@ public class Main {
 	 * TODO check for albums with inconsistent year/artwork/location/artist/genre/
 	 * TODO consolidate artists who have more than one genre, excluding the Bootlegs genre
 	 * 
+	 * TODO Fix Album Artist
+	 * TODO Fix non-integer years and track numbers
+	 * TODO fix/replace disk number tags
+	 * 
 	 * TODO Embed jpg files which correspond to albums where the art isn't embedded
 	 * TODO Delete jpg files which correspond to albums where the art IS embedded
 	 * TODO Investigate jaudiotagger warnings
@@ -103,13 +107,13 @@ public class Main {
 			traverseDirectory(rootDirectory.listFiles());
 		}
 		
-		/*
+		
 		//If we were adding to the album bag, then print/write
 		//the toString for each album.
 		if(mAddToAlbumBag){
 			printOutput(mAlbumBag.toStringConflictingAlbums());
 		}
-		*/
+		
 		
 		mAlbumBag.doStuffEachAlbum(mWriteToFile, mResultFile);
 		

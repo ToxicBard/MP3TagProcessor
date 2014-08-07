@@ -130,6 +130,10 @@ public class Song {
 		return mTag.getFirst(FieldKey.ARTIST);
 	}
 	
+	public String getAlbumArtist(){
+		return mTag.getFirst(FieldKey.ALBUM_ARTIST);
+	}
+	
 	public String getAlbum(){
 		return mTag.getFirst(FieldKey.ALBUM);
 	}
