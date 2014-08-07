@@ -1,35 +1,73 @@
 package songStructures;
 
+import java.util.ArrayList;
+
 public class AlbumBag {
-	/*
-	 * -Property - ArrayList of type Album
-	 */
+	
+	private ArrayList<Album> mAlbums = new ArrayList<Album>();
+	
+	public void addSong(Song mySong){
+		boolean addedToExistingAlbum = false;
+		Album newAlbum = null;
+		
+		/*
+		 * Check to see if the song belongs to an album
+		 * that's already been added, from latest to first added
+		 */
+		for(int i = mAlbums.size()-1;i>=0;i--){
+			//If the new song album matches this iteration's
+			//album title, then add it.
+			if(mySong.getAlbum().equals(mAlbums.get(i).getAlbumTitle())){
+				mAlbums.get(i).addSong(mySong);
+				addedToExistingAlbum = true;
+				break;
+			}
+		}
+		
+		//If the song's album wasn't found, then create a new
+		//album and add it to the list
+		if(addedToExistingAlbum == false){
+			newAlbum = new Album(mySong);
+			mAlbums.add(newAlbum);
+		}
+		
+	}
+	
+	public String toString(){
+		String toReturn = "";
+		
+		for(Album loopAlbum : mAlbums){
+			toReturn += loopAlbum.toString() + "\n";
+		}
+		
+		return toReturn;
+	}
+	
+	public String toStringConflictingAlbums(){
+		String toReturn = "";
+		
+		for(Album loopAlbum : mAlbums){
+			if(loopAlbum.hasConflicts()){
+				toReturn += loopAlbum.toString() + "\n";
+			}
+		}
+		
+		return toReturn;
+	}
+	
+	public void doStuffEachAlbum(){
+		for(Album loopAlbum : mAlbums){
+			loopAlbum.doStuffAlbum();
+		}
+	}
+	
+	public void doStuffEachSong(){
+		for(Album loopAlbum : mAlbums){
+			loopAlbum.doStuffEachSong();
+		}
+	}
 	
 	/*
-	 * -Constructor - use the default constructor
-	 */
-	
-	/*
-	 * -the public addSong function should encapsulate
-	 * all of the logic of checking to see whether the song's
-	 * album is already in the list, adding the song to the
-	 * appropriate album if so, and adding the new album 
-	 * with the song if not.
-	 * -Search backwards so that recently added albums will be
-	 * found first
-	 */
-	
-	/*
-	 * A toString function should display each album title
-	 * and the count of different genre/artist/art/location/etc tags
-	 */
-	
-	/*
-	 * -Make a function to loop through and call the doStuffAlbum
-	 * function for each album
-	 */
-	
-	/*
-	 * -Serialization to save the albumbag to file
+	 * TODO Add Serialization to save the albumbag to file
 	 */
 }

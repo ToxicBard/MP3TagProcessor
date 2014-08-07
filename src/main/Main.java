@@ -18,6 +18,7 @@ import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
 
+import songStructures.AlbumBag;
 import songStructures.Song;
 import commonTools.CommonTools;
 import commonTools.FileTools;
@@ -28,9 +29,11 @@ public class Main {
 	
 	private static final boolean mShowBusyDisplay = false;
 	private static final boolean mEnableLogging = false;
-	private static final boolean mWriteToFile = false;
+	private static final boolean mWriteToFile = true;
+	private static final boolean mAddToAlbumBag = true;
 	
 	private static BufferedWriter mResultFile = null;
+	private static AlbumBag mAlbumBag = new AlbumBag();
 	
 	
 	public static void main(String[] args) throws IOException {
@@ -38,8 +41,8 @@ public class Main {
 	}
 	
 	/*
-	 * TODO clean up messy song/album titles and genres
-	 * TODO Implement writing of process info to a file, rather than the console
+	 * 
+	 * TODO Investigate "AWT blocker activation interrupted" Exception
 	 * 
 	 * TODO Fix any folders which contain multiple albums
 	 * TODO write Song, Album, and AlbumBag classes
@@ -82,6 +85,12 @@ public class Main {
 		 */
 		traverseDirectory(rootDirectory.listFiles());
 		
+		//If we were adding to the album bag, then print/write
+		//the toString for each album.
+		if(mAddToAlbumBag){
+			printOutput(mAlbumBag.toStringConflictingAlbums());
+		}
+		
 		//Stop the busy display if it's running
 		if(busyDisplay.isRunning()){
 			busyDisplay.stopRunning();
@@ -121,10 +130,20 @@ public class Main {
 	
 	private static void openFile(File myFile){
 		AudioFile myAudioFile = null;
+		Song mySong = null;
 		
 		try {
+			//Open the file and create an associated Song object
 			myAudioFile = AudioFileIO.read(myFile);
-			doStuffSong(myAudioFile);
+			mySong = new Song(myAudioFile);
+			
+			//Do explicitly programmed stuff where relevant
+			doStuffSong(mySong);
+			
+			//Add to the Album bag if specified
+			if(mAddToAlbumBag){
+				mAlbumBag.addSong(mySong);
+			}
 		} catch (CannotReadException | IOException | TagException
 				| ReadOnlyFileException | InvalidAudioFrameException e) {
 			/*
@@ -147,10 +166,10 @@ public class Main {
 	/*
 	 * This should get called for every valid audio file
 	 */
-	private static void doStuffSong(AudioFile myAudioFile) throws IOException{
+	private static void doStuffSong(Song mySong) throws IOException{
 		String operationResult = null;
-		Song mySong = new Song(myAudioFile);
 		
+		/*
 		operationResult = mySong.findReplaceTag(FieldKey.GENRE, "Done", "|", false, true);
 		operationResult += mySong.findReplaceTag(FieldKey.GENRE, "done", "|", false, true);
 		
@@ -160,10 +179,20 @@ public class Main {
 		else{
 			System.out.print(operationResult);
 		}
+		*/
 	}
 	
 	private static void doStuffFolder(File myFolder){
 		//Do nothing for now
+	}
+	
+	private static void printOutput(String output) throws IOException{
+		if(mWriteToFile == true && mResultFile != null){
+			mResultFile.write(output);
+		}
+		else{
+			System.out.println(output);
+		}
 	}
 
 }

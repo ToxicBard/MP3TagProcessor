@@ -23,12 +23,6 @@ public class Song {
 		mTag = mAudioFile.getTag();
 	}
 	
-	/*
-	 * -Add a function to get the absolutepath of the file itself
-	 * -Add a function to get the absolutepath of the parent directory
-	 * -Add a function to count the number of instances of a particular tag
-	 */
-	
 	public String findReplaceTag(FieldKey tagKey, String findString, 
 			String replaceString, boolean exactMatchOnly, boolean commit){
 		String currentTag = mTag.getFirst(tagKey);
@@ -97,7 +91,7 @@ public class Song {
 		return this.getTags(tagKey).size();
 	}
 	
-	private File getParentDirectory(){
+	public File getParentDirectory(){
 		return mAudioFile.getFile().getAbsoluteFile().getParentFile();
 	}
 	
@@ -131,5 +125,9 @@ public class Song {
 	
 	public String getYear(){
 		return mTag.getFirst(FieldKey.YEAR);
+	}
+	
+	public void doStuff(){
+		//Do stuff
 	}
 }
