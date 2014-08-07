@@ -31,8 +31,8 @@ public class Main {
 	private static final boolean mEnableLogging = false;
 	private static final boolean mWriteToFile = true;
 	private static final boolean mAddToAlbumBag = true;
-	private static final boolean mSaveAlbumBag = true;
-	private static final boolean mLoadAlbumBag = false;
+	private static final boolean mSaveAlbumBag = false;
+	private static final boolean mLoadAlbumBag = true;
 	
 	private static final String mAlbumBagFileLocation = "sav/albumbag.bag";
 	

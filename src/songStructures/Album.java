@@ -255,7 +255,11 @@ public class Album implements Serializable {
 		//Do stuff
 		String operationOutput = "";
 		
-		operationOutput = this.fixYearTags(false) + "\n\n";
+		operationOutput = this.fixYearTags(false);
+		
+		if(!operationOutput.trim().isEmpty()){
+			operationOutput += "\n";
+		}
 		
 		if(writeToFile){
 			try {
