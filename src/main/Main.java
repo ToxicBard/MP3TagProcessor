@@ -103,13 +103,15 @@ public class Main {
 			traverseDirectory(rootDirectory.listFiles());
 		}
 		
+		/*
 		//If we were adding to the album bag, then print/write
 		//the toString for each album.
 		if(mAddToAlbumBag){
 			printOutput(mAlbumBag.toStringConflictingAlbums());
 		}
+		*/
 		
-		//mAlbumBag.doStuffEachSong();
+		mAlbumBag.doStuffEachAlbum(mWriteToFile, mResultFile);
 		
 		//If we wrote to album bag and want to save it, then save it here
 		if(mAddToAlbumBag && mSaveAlbumBag){

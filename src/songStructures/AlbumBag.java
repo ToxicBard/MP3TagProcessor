@@ -1,10 +1,12 @@
 package songStructures;
 
+import java.io.BufferedWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class AlbumBag implements Serializable {
 	
+	private static final long serialVersionUID = 8852937180442568962L;
 	private ArrayList<Album> mAlbums = new ArrayList<Album>();
 	
 	public void addSong(Song mySong){
@@ -56,9 +58,9 @@ public class AlbumBag implements Serializable {
 		return toReturn;
 	}
 	
-	public void doStuffEachAlbum(){
+	public void doStuffEachAlbum(boolean writeToFile, BufferedWriter fileOut){
 		for(Album loopAlbum : mAlbums){
-			loopAlbum.doStuffAlbum();
+			loopAlbum.doStuffAlbum(writeToFile, fileOut);
 		}
 	}
 	

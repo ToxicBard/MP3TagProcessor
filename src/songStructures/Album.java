@@ -1,5 +1,7 @@
 package songStructures;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -182,18 +184,6 @@ public class Album implements Serializable {
 		return toReturn;
 	}
 	
-	public void doStuffAlbum(){
-		//Do stuff
-	}
-	
-	public void doStuffEachSong(){
-		ArrayList<Song> mySongs = this.loadSongs();
-		
-		for(Song loopSong : mySongs){
-			loopSong.doStuff();
-		}
-	}
-	
 	public ArrayList<Song> loadSongs(){
 		ArrayList<Song> albumSongs = new ArrayList<Song>();
 		File readFile = null;
@@ -245,7 +235,7 @@ public class Album implements Serializable {
 		return false;
 	}
 	
-	public String fixYearTags(boolean commit){
+	private String fixYearTags(boolean commit){
 		String toReturn = "";
 		String year = this.getFirstAlbumYear();
 		ArrayList<Song> albumSongs = null;
@@ -259,5 +249,31 @@ public class Album implements Serializable {
 		}
 		
 		return toReturn;
+	}
+	
+	public void doStuffAlbum(boolean writeToFile, BufferedWriter fileOut) {
+		//Do stuff
+		String operationOutput = "";
+		
+		operationOutput = this.fixYearTags(false) + "\n\n";
+		
+		if(writeToFile){
+			try {
+				fileOut.write(operationOutput);
+			} catch (IOException e) {
+				CommonTools.processError("Error writing doStuffAlbum output to file");
+			}
+		}
+		else{
+			System.out.println(operationOutput);
+		}
+	}
+	
+	public void doStuffEachSong(){
+		ArrayList<Song> mySongs = this.loadSongs();
+		
+		for(Song loopSong : mySongs){
+			loopSong.doStuff();
+		}
 	}
 }
