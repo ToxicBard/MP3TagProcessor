@@ -29,7 +29,8 @@ public class Song {
 
 		toReturn = this.toString() + " | " + currentTag + ", " + newTag + "\n";
 		
-		if(commit){
+		//If we want to commit and the new tag is different than the current one, then write the tag
+		if(commit && currentTag.equals(newTag) == false){
 			try {
 				mTag.setField(tagKey, newTag);
 				mAudioFile.commit();
