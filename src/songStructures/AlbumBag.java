@@ -1,8 +1,9 @@
 package songStructures;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class AlbumBag {
+public class AlbumBag implements Serializable {
 	
 	private ArrayList<Album> mAlbums = new ArrayList<Album>();
 	
@@ -58,12 +59,6 @@ public class AlbumBag {
 	public void doStuffEachAlbum(){
 		for(Album loopAlbum : mAlbums){
 			loopAlbum.doStuffAlbum();
-		}
-	}
-	
-	public void doStuffEachSong(){
-		for(Album loopAlbum : mAlbums){
-			loopAlbum.doStuffEachSong();
 		}
 	}
 	

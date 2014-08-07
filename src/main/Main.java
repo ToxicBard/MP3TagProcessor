@@ -31,6 +31,10 @@ public class Main {
 	private static final boolean mEnableLogging = false;
 	private static final boolean mWriteToFile = true;
 	private static final boolean mAddToAlbumBag = true;
+	private static final boolean mSaveAlbumBag = true;
+	private static final boolean mLoadAlbumBag = false;
+	
+	private static final String mAlbumBagFileLocation = "sav/albumbag.bag";
 	
 	private static BufferedWriter mResultFile = null;
 	private static AlbumBag mAlbumBag = new AlbumBag();
@@ -62,7 +66,14 @@ public class Main {
 		//Start counting the time taken to iterate
 		botTimer.start();
 		
-		rootDirectory = FileTools.selectSavedDirectory("Select MP3 Directory",  "cfg/mp3directory.cfg");
+		/*
+		 * Select the directory from the user, but only if
+		 * we're actually traversing the directory, rather than
+		 * simply loading and processing a saved albumbag.
+		 */
+		if(mLoadAlbumBag == false){
+			rootDirectory = FileTools.selectSavedDirectory("Select MP3 Directory",  "cfg/mp3directory.cfg");
+		}
 		
 		if(mEnableLogging == false){
 			Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
@@ -79,16 +90,28 @@ public class Main {
 			mResultFile = FileTools.openWriteFile("out/taggerOut.txt");
 		}
 		
+		if(mLoadAlbumBag){
+			mAlbumBag = (AlbumBag) FileTools.readObjectFromFile(mAlbumBagFileLocation);
+		}
+		
 		/*
 		 * Traverse the directory structure doing things
-		 * per each file and folder
+		 * per each file and folder as long as we're not
+		 * loading from the albumbag save file
 		 */
-		traverseDirectory(rootDirectory.listFiles());
+		if(mLoadAlbumBag == false){
+			traverseDirectory(rootDirectory.listFiles());
+		}
 		
 		//If we were adding to the album bag, then print/write
 		//the toString for each album.
 		if(mAddToAlbumBag){
 			printOutput(mAlbumBag.toStringConflictingAlbums());
+		}
+		
+		//If we wrote to album bag and want to save it, then save it here
+		if(mAddToAlbumBag && mSaveAlbumBag){
+			FileTools.writeObjectToFile(mAlbumBag, mAlbumBagFileLocation);
 		}
 		
 		//Stop the busy display if it's running

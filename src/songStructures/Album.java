@@ -1,17 +1,18 @@
 package songStructures;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import commonTools.CommonTools;
 
-public class Album {
+public class Album implements Serializable {
 	/*
 	 * TODO Add Arraylist property to hold album art
 	 */
 	
 	private String mAlbumTitle = null;
-	private ArrayList<Song> mAlbumSongs = new ArrayList<Song>();
+	private ArrayList<String> mAlbumSongPaths = new ArrayList<String>();
 	
 	private ArrayList<String> mAlbumGenres = new ArrayList<String>();
 	private ArrayList<String> mAlbumArtists = new ArrayList<String>();
@@ -40,7 +41,7 @@ public class Album {
 		}
 		
 		//Always add the song to the Songs list
-		mAlbumSongs.add(newSong);
+		mAlbumSongPaths.add(newSong.getAbsolutePath());
 		
 		//Add the genre to the genres list if it's not already there
 		if(!mAlbumGenres.contains(songGenre)){
@@ -112,7 +113,7 @@ public class Album {
 		
 		toReturn += this.getFirstAlbumArtist() + " - ";
 		toReturn += this.getAlbumTitle() + ", ";
-		toReturn += mAlbumSongs.size() + " songs";
+		toReturn += mAlbumSongPaths.size() + " songs";
 		
 		//If there are conflicts, then display them
 		if(!conflictsString.isEmpty()){
@@ -174,12 +175,6 @@ public class Album {
 	
 	public void doStuffAlbum(){
 		//Do stuff
-	}
-	
-	public void doStuffEachSong(){
-		for(Song loopSong : mAlbumSongs){
-			loopSong.doStuff();
-		}
 	}
 	
 	/*
