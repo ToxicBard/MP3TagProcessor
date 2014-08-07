@@ -56,6 +56,7 @@ public class Main {
 	 * TODO Fix Album Artist
 	 * TODO Fix non-integer years and track numbers
 	 * TODO fix/replace disk number tags
+	 * TODO Rename files based on track/title
 	 * 
 	 * TODO Embed jpg files which correspond to albums where the art isn't embedded
 	 * TODO Delete jpg files which correspond to albums where the art IS embedded
