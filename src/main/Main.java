@@ -109,6 +109,8 @@ public class Main {
 			printOutput(mAlbumBag.toStringConflictingAlbums());
 		}
 		
+		//mAlbumBag.doStuffEachSong();
+		
 		//If we wrote to album bag and want to save it, then save it here
 		if(mAddToAlbumBag && mSaveAlbumBag){
 			FileTools.writeObjectToFile(mAlbumBag, mAlbumBagFileLocation);

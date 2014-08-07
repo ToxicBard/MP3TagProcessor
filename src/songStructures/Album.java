@@ -1,8 +1,16 @@
 package songStructures;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.TagException;
 
 import commonTools.CommonTools;
 
@@ -175,6 +183,42 @@ public class Album implements Serializable {
 	
 	public void doStuffAlbum(){
 		//Do stuff
+	}
+	
+	public void doStuffEachSong(){
+		ArrayList<Song> mySongs = this.loadSongs();
+		
+		for(Song loopSong : mySongs){
+			loopSong.doStuff();
+		}
+	}
+	
+	public ArrayList<Song> loadSongs(){
+		ArrayList<Song> albumSongs = new ArrayList<Song>();
+		File readFile = null;
+		AudioFile readAudioFile = null;
+		Song readSong = null;
+		
+		for(String songPath : mAlbumSongPaths){
+			//Open the file
+			readFile = new File(songPath);
+			
+			try {
+				//Read the audio file from disk
+				readAudioFile = AudioFileIO.read(readFile);
+			} catch (CannotReadException | IOException | TagException
+					| ReadOnlyFileException | InvalidAudioFrameException e) {
+				CommonTools.processError("Error Opening Album Song AudioFile");
+			}
+			
+			//Create the song object from the audio file
+			readSong = new Song(readAudioFile);
+			
+			//Add the newly loaded song to the ArrayList
+			albumSongs.add(readSong);
+		}
+		
+		return albumSongs;
 	}
 	
 	/*

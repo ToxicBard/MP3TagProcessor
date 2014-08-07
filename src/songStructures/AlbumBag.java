@@ -62,6 +62,12 @@ public class AlbumBag implements Serializable {
 		}
 	}
 	
+	public void doStuffEachSong(){
+		for(Album loopAlbum : mAlbums){
+			loopAlbum.doStuffEachSong();
+		}
+	}
+	
 	/*
 	 * TODO Add Serialization to save the albumbag to file
 	 */

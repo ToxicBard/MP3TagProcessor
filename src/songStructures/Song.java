@@ -127,6 +127,10 @@ public class Song {
 		return mTag.getFirst(FieldKey.YEAR);
 	}
 	
+	public String toString(){
+		return this.getArtist() + " - " + this.getAlbum() + ", " + this.getTrack() + " - " + this.getTitle();
+	}
+	
 	public void doStuff(){
 		//Do stuff
 	}
