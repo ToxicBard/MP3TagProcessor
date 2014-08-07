@@ -23,6 +23,24 @@ public class Song {
 		mTag = mAudioFile.getTag();
 	}
 	
+	public String writeTag(FieldKey tagKey, String newTag, boolean commit){
+		String currentTag = mTag.getFirst(tagKey);
+		String toReturn = "";
+
+		toReturn = this.toString() + " | " + currentTag + ", " + newTag + "\n";
+		
+		if(commit){
+			try {
+				mTag.setField(tagKey, newTag);
+				mAudioFile.commit();
+			} catch (KeyNotFoundException | FieldDataInvalidException | CannotWriteException e) {
+				CommonTools.processError("Error writing tag for " + currentTag);
+			}
+		}
+		
+		return toReturn;
+	}
+	
 	public String findReplaceTag(FieldKey tagKey, String findString, 
 			String replaceString, boolean exactMatchOnly, boolean commit){
 		String currentTag = mTag.getFirst(tagKey);

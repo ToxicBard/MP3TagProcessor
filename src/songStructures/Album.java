@@ -10,6 +10,7 @@ import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
 import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.TagException;
 
 import commonTools.CommonTools;
@@ -76,33 +77,33 @@ public class Album implements Serializable {
 	}
 	
 	public String getFirstAlbumArtist(){
-		String toReturn = "";
-		
-		if(mAlbumArtists.size() > 0){
-			toReturn = mAlbumArtists.get(0);
+		for(String loopArtist : mAlbumArtists){
+			if(!loopArtist.trim().isEmpty()){
+				return loopArtist;
+			}
 		}
 		
-		return toReturn;
+		return "";
 	}
 	
 	public String getFirstAlbumGenre(){
-		String toReturn = "";
-		
-		if(mAlbumGenres.size() > 0){
-			toReturn = mAlbumGenres.get(0);
+		for(String loopGenre : mAlbumGenres){
+			if(!loopGenre.trim().isEmpty()){
+				return loopGenre;
+			}
 		}
 		
-		return toReturn;
+		return "";
 	}
 	
 	public String getFirstAlbumYear(){
-		String toReturn = "";
-		
-		if(mAlbumYears.size() > 0){
-			toReturn = mAlbumYears.get(0);
+		for(String loopYear : mAlbumYears){
+			if(!loopYear.trim().isEmpty()){
+				return loopYear;
+			}
 		}
 		
-		return toReturn;
+		return "";
 	}
 	
 	public File getFirstAlbumDirectory(){
@@ -221,10 +222,42 @@ public class Album implements Serializable {
 		return albumSongs;
 	}
 	
-	/*
-	 * TODO Once the class is written, compare the performance of
-	 * having get functions that actively go through the songs for
-	 * lists of each tag, rather than storing the lists as a property
-	 * of the album
-	 */
+	private int countNonEmptyYearTags(){
+		int nonEmptyYearTags = 0;
+		
+		for(String tagLoop : mAlbumYears){
+			if(!tagLoop.trim().isEmpty()){
+				nonEmptyYearTags++;
+			}
+		}
+		
+		return nonEmptyYearTags;
+	}
+	
+	private boolean canFixYearTags(){
+		//If there is a year conflict, but there's only one valid year value,
+		//Then that means that not all songs in the album have a year value.
+		//This can easily be fixed by simply filling in the year for the
+		//songs with missing year values.
+		if(this.getConflicts().contains(albumConflictType.Years) && this.countNonEmptyYearTags() == 1){
+			return true;
+		}
+		return false;
+	}
+	
+	public String fixYearTags(boolean commit){
+		String toReturn = "";
+		String year = this.getFirstAlbumYear();
+		ArrayList<Song> albumSongs = null;
+		
+		if(this.canFixYearTags()){
+			albumSongs = this.loadSongs();
+			
+			for(Song loopSong : albumSongs){
+				toReturn += loopSong.writeTag(FieldKey.YEAR, year, commit);
+			}
+		}
+		
+		return toReturn;
+	}
 }
