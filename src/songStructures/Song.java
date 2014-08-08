@@ -13,6 +13,8 @@ import org.jaudiotagger.tag.Tag;
 
 import commonTools.CommonTools;
 
+import org.apache.commons.io.FilenameUtils;
+
 public class Song {
 	
 	private AudioFile mAudioFile;
@@ -169,11 +171,13 @@ public class Song {
 		return false;
 	}
 	
-	/*
+	
 	public String renameByTag(boolean commit){
 		int trackNumber = this.getTrackAsInt();
+		String out = "";
+		String origFileName = mAudioFile.getFile().getAbsolutePath();
 		String trackNumberAsString = trackNumber + "";
-		String fileExtension = mAudioFile.getFile().
+		String fileExtension = FilenameUtils.getExtension(origFileName);
 		
 		if(trackNumber == 0){
 			CommonTools.processError("Invalid Track Number");
@@ -182,8 +186,16 @@ public class Song {
 		if(trackNumber > 0 && trackNumber <= 9){
 			trackNumberAsString = "0" + trackNumber;
 		}
+		
+		out = origFileName;
+		
+		if(!out.trim().isEmpty()){
+			out += "\n";
+		}
+		
+		return out;
 	}
-	*/
+	
 	
 	public void doStuff(){
 		//Do stuff

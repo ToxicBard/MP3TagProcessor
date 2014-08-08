@@ -203,6 +203,8 @@ public class Main {
 			printOutput(mySong.toString() + "\n");
 		}
 		
+		printOutput(mySong.renameByTag(false));
+		
 		/*
 		operationResult = mySong.findReplaceTag(FieldKey.GENRE, "Done", "|", false, true);
 		operationResult += mySong.findReplaceTag(FieldKey.GENRE, "done", "|", false, true);
