@@ -19,6 +19,7 @@ import commonTools.CommonTools;
 
 public class Album implements Serializable {
 	/*
+	 * TODO Change mAlbumSongPaths to an ArrayList of SongInfo objects
 	 * TODO Add Arraylist property to hold album art
 	 */
 	
