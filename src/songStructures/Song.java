@@ -153,7 +153,7 @@ public class Song {
 	}
 	
 	public String toString(){
-		return this.getArtist() + " - " + this.getAlbum() + ", " + this.getTrack() + " - " + this.getTitle();
+		return this.getArtist() + " - " + this.getAlbum() + ", " + this.getTrack() + " - " + this.getTitle() + "|" + mAudioFile.getFile().getName();
 	}
 	
 	private boolean hasTrack(){
@@ -174,26 +174,70 @@ public class Song {
 	
 	public String renameByTag(boolean commit){
 		int trackNumber = this.getTrackAsInt();
-		String out = "";
-		String origFileName = mAudioFile.getFile().getAbsolutePath();
-		String trackNumberAsString = trackNumber + "";
+		int maxFileNameLength = 42;
+		int fileNameTrimLength;
+		boolean renameResult;
+		String parentDirectoryPath = mAudioFile.getFile().getParentFile().getAbsolutePath();
+		String origFileName = mAudioFile.getFile().getName();
 		String fileExtension = FilenameUtils.getExtension(origFileName);
+		String newFileName;
+		String trackNumberAsString = trackNumber + "";
+		String songTitle = this.getTitle();
+		String toReturn = "";
+		File originalFile = mAudioFile.getFile();
+		File renameFile = null;
 		
+		//Check track number String
 		if(trackNumber == 0){
 			CommonTools.processError("Invalid Track Number");
 		}
 		
+		//Add a leading 0 so that track number string is always at least 2 digits
 		if(trackNumber > 0 && trackNumber <= 9){
 			trackNumberAsString = "0" + trackNumber;
 		}
 		
-		out = origFileName;
+		//Generate new filename (before adding extension).  Convert title to digits and letters to prevent
+		//invalid filename issues.
+		newFileName = trackNumberAsString + "_" + CommonTools.toDigitsEnglishChars(songTitle);
 		
-		if(!out.trim().isEmpty()){
-			out += "\n";
+		/*
+		 * If the generated filename (with period and extension added) is too long, then
+		 * decide on the length to trim it to (based on extension length) and trim accordingly
+		 */
+		if((newFileName + "." + fileExtension).length() > maxFileNameLength){
+			fileNameTrimLength = maxFileNameLength - fileExtension.length() - ".".length();
+			newFileName = newFileName.substring(0, fileNameTrimLength);
 		}
 		
-		return out;
+		//Add the extension to the generated filename, regardless of whether it was trimmed or not.
+		newFileName = newFileName + "." + fileExtension;
+		
+		//We only care to continue processing if the existing file doesn't start with
+		//the decided-upon track number string and the new filename is different from the current filename
+		if(!origFileName.startsWith(trackNumberAsString) && !newFileName.equals(origFileName)){
+			renameFile = new File(parentDirectoryPath + "/" + newFileName);
+			
+			//If a file with the new filename already exists, then crash and manually investigate
+			if(renameFile.exists()){
+				CommonTools.processError("Potential rename collision for " + this.toString());
+			}
+			
+			toReturn = newFileName + "|length:" + newFileName.length() + "|" + this.toString();
+			
+			if(commit){
+				renameResult = originalFile.renameTo(renameFile);
+				if(renameResult == false){
+					CommonTools.processError("Rename failed for " + this.toString());
+				}
+			}
+		}
+		
+		if(!toReturn.trim().isEmpty()){
+			toReturn += "\n";
+		}
+		
+		return toReturn;
 	}
 	
 	

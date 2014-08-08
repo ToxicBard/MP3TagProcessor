@@ -197,11 +197,6 @@ public class Main {
 	 * This should get called for every valid audio file
 	 */
 	private static void doStuffSong(Song mySong) throws IOException{
-		String operationResult = null;
-		
-		if(mySong.getTrack().contains("/") || CommonTools.intParse(mySong.getTrack()) == 0){
-			printOutput(mySong.toString() + "\n");
-		}
 		
 		printOutput(mySong.renameByTag(false));
 		
