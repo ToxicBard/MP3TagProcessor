@@ -18,8 +18,39 @@ import org.apache.commons.io.FilenameUtils;
 public class Song {
 	
 	/*
+	 * TODO Add packed/unpacked state functionality for Song
 	 * TODO Break out the logic of which files to rename by tag into their own public
 	 * boolean function so that renameByTag serves are more general purpose
+	 */
+	
+	/*
+	 * Packed/Unpacked functionality:
+	 * -Memory limitations combined with the necessity to test
+	 * cases on a per-album basis without having to reload
+	 * each song in the album necessitate the implementation of
+	 * a packed/unpacked state for Song objects.
+	 * -The packed state of Song will replace the concept of having
+	 * a separate SongInfo object to store lists of in the Album object.
+	 * -When creating a Song object it will be unpacked by default, but
+	 * it will need to be packed before being stored to the ArrayList
+	 * within the Album object.  This is because an actual AudioFile
+	 * (and thus, by extension, an unpacked Song object) takes up
+	 * entirely too much space in memory, and quickly exhausts the system's
+	 * resources.
+	 * -There will be public functions for Pack() and Unpack()
+	 * -The Pack function will store the relevant parameters as
+	 * local properties and deallocate the AudioFile reference.
+	 * It might also have to explicitly call garbage collection.
+	 * -The unpack function will create the AudioFile object once
+	 * more and deallocate the local properties used for the packed 
+	 * state
+	 * -There will be a public enumeration and get method
+	 * which determines the current state of the Song
+	 * -Each method whose functionality depends on the state
+	 * of the song will have to have a select/case statement to
+	 * determine what to do base don the state of the Song.
+	 * Some will provide alternate functionality and some will
+	 * explicitly crash if called in an invalid state
 	 */
 	
 	private AudioFile mAudioFile;
@@ -139,6 +170,10 @@ public class Song {
 	
 	public String getAlbumArtist(){
 		return mTag.getFirst(FieldKey.ALBUM_ARTIST);
+	}
+	
+	public String getDiscNumber(){
+		return mTag.getFirst(FieldKey.DISC_NO);
 	}
 	
 	public String getAlbum(){

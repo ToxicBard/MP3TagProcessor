@@ -19,7 +19,7 @@ import commonTools.CommonTools;
 
 public class Album implements Serializable {
 	/*
-	 * TODO Change mAlbumSongPaths to an ArrayList of SongInfo objects
+	 * TODO Add functionality for packed/unpacked songs
 	 * TODO Find/replace on album title
 	 * TODO Add Arraylist property to hold album art
 	 */
@@ -30,6 +30,7 @@ public class Album implements Serializable {
 	
 	private ArrayList<String> mAlbumGenres = new ArrayList<String>();
 	private ArrayList<String> mAlbumYears = new ArrayList<String>();
+	private ArrayList<String> mDiscNumbers = new ArrayList<String>();
 	private ArrayList<File> mAlbumDirectories = new ArrayList<File>();
 	
 	
@@ -42,6 +43,7 @@ public class Album implements Serializable {
 	public void addSong(Song newSong){
 		String songGenre = newSong.getGenre();
 		String songYear = newSong.getYear();
+		String songDiscNumber = newSong.getDiscNumber();
 		File songDirectory = newSong.getParentDirectory();
 		
 		//If a song that doesn't match the artist and album title is added, then crash
@@ -65,6 +67,11 @@ public class Album implements Serializable {
 		//Add the year to the years list if it's not already there
 		if(!mAlbumYears.contains(songYear)){
 			mAlbumYears.add(songYear);
+		}
+		
+		//Add the year to the years list if it's not already there
+		if(!mDiscNumbers.contains(songDiscNumber)){
+			mDiscNumbers.add(songYear);
 		}
 		
 		if(!mAlbumDirectories.contains(songDirectory)){
@@ -95,6 +102,16 @@ public class Album implements Serializable {
 		for(String loopGenre : mAlbumGenres){
 			if(!loopGenre.trim().isEmpty()){
 				return loopGenre;
+			}
+		}
+		
+		return "";
+	}
+	
+	public String getFirstDiscNumber(){
+		for(String loopDiscNumber : mDiscNumbers){
+			if(!loopDiscNumber.trim().isEmpty()){
+				return loopDiscNumber;
 			}
 		}
 		
@@ -138,7 +155,7 @@ public class Album implements Serializable {
 	}
 	
 	private enum albumConflictType{
-		Genres, Years, Directories
+		Genres, Years, Directories, DiscNumbers
 	}
 	
 	private ArrayList<albumConflictType> getConflicts(){
@@ -152,6 +169,9 @@ public class Album implements Serializable {
 		}
 		if(mAlbumDirectories.size() > 1){
 			conflicts.add(albumConflictType.Directories);
+		}
+		if(mDiscNumbers.size() > 1){
+			conflicts.add(albumConflictType.DiscNumbers);
 		}
 		
 		return conflicts;

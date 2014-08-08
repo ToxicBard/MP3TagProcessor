@@ -30,7 +30,7 @@ public class Main {
 	private static final boolean mShowBusyDisplay = false;
 	private static final boolean mEnableLogging = false;
 	private static final boolean mAddToAlbumBag = true;
-	private static final boolean mSaveAlbumBag = false;
+	private static final boolean mSaveAlbumBag = true;
 	private static final boolean mLoadAlbumBag = false;
 	
 	private static final String mAlbumBagFileLocation = "sav/albumbag.bag";
@@ -44,6 +44,10 @@ public class Main {
 	}
 	
 	/*
+	 * 
+	 * TODO Implement packed/unpacked Songs
+	 * TODO Clean up albums with multiple discnumbers
+	 * TODO Implement renameByTag on a per-album basis, rather than on a per-song basis
 	 * 
 	 * TODO Investigate "AWT blocker activation interrupted" Exception
 	 * 
@@ -110,7 +114,7 @@ public class Main {
 		//If we were adding to the album bag, then print/write
 		//the toString for each album.
 		if(mAddToAlbumBag){
-			//printOutput(mAlbumBag.toStringConflictingAlbums());
+			printOutput(mAlbumBag.toStringConflictingAlbums());
 		}
 		
 		
@@ -197,8 +201,6 @@ public class Main {
 	 * This should get called for every valid audio file
 	 */
 	private static void doStuffSong(Song mySong) throws IOException{
-		
-		printOutput(mySong.renameByTag(false));
 		
 		/*
 		operationResult = mySong.findReplaceTag(FieldKey.GENRE, "Done", "|", false, true);
