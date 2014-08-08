@@ -17,6 +17,11 @@ import org.apache.commons.io.FilenameUtils;
 
 public class Song {
 	
+	/*
+	 * TODO Break out the logic of which files to rename by tag into their own public
+	 * boolean function so that renameByTag serves are more general purpose
+	 */
+	
 	private AudioFile mAudioFile;
 	private Tag mTag;
 	
