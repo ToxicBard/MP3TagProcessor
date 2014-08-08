@@ -30,7 +30,7 @@ public class Main {
 	private static final boolean mShowBusyDisplay = false;
 	private static final boolean mEnableLogging = false;
 	private static final boolean mAddToAlbumBag = true;
-	private static final boolean mSaveAlbumBag = true;
+	private static final boolean mSaveAlbumBag = false;
 	private static final boolean mLoadAlbumBag = false;
 	
 	private static final String mAlbumBagFileLocation = "sav/albumbag.bag";
@@ -199,7 +199,7 @@ public class Main {
 	private static void doStuffSong(Song mySong) throws IOException{
 		String operationResult = null;
 		
-		if(mySong.hasInvalidTrack()){
+		if(mySong.getTrack().contains("/") || CommonTools.intParse(mySong.getTrack()) == 0){
 			printOutput(mySong.toString() + "\n");
 		}
 		
@@ -215,7 +215,7 @@ public class Main {
 	}
 	
 	private static void printOutput(String output) throws IOException{
-		System.out.println(output);
+		System.out.print(output);
 		
 		if(mResultFile != null){
 			mResultFile.write(output);
