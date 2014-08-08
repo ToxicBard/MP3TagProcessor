@@ -249,7 +249,7 @@ public class Album implements Serializable {
 		return toReturn;
 	}
 	
-	public void doStuffAlbum(boolean writeToFile, BufferedWriter fileOut) {
+	public void doStuffAlbum(BufferedWriter fileOut) {
 		//Do stuff
 		String operationOutput = "";
 		
@@ -259,15 +259,11 @@ public class Album implements Serializable {
 			operationOutput += "\n";
 		}
 		
-		if(writeToFile){
-			try {
-				fileOut.write(operationOutput);
-			} catch (IOException e) {
-				CommonTools.processError("Error writing doStuffAlbum output to file");
-			}
-		}
-		else{
-			System.out.println(operationOutput);
+		System.out.print(operationOutput);
+		try {
+			fileOut.write(operationOutput);
+		} catch (IOException e) {
+			CommonTools.processError("Error writing doStuffAlbum output to file");
 		}
 	}
 	

@@ -29,7 +29,6 @@ public class Main {
 	
 	private static final boolean mShowBusyDisplay = false;
 	private static final boolean mEnableLogging = false;
-	private static final boolean mWriteToFile = true;
 	private static final boolean mAddToAlbumBag = true;
 	private static final boolean mSaveAlbumBag = true;
 	private static final boolean mLoadAlbumBag = false;
@@ -90,10 +89,9 @@ public class Main {
 			busyDisplay.start();
 		}
 		
-		//Open the write file if we're writing to file rather than console
-		if(mWriteToFile){
-			mResultFile = FileTools.openWriteFile("out/taggerOut.txt");
-		}
+		//Open the write file
+		mResultFile = FileTools.openWriteFile("out/taggerOut.txt");
+
 		
 		if(mLoadAlbumBag){
 			mAlbumBag = (AlbumBag) FileTools.readObjectFromFile(mAlbumBagFileLocation);
@@ -112,11 +110,11 @@ public class Main {
 		//If we were adding to the album bag, then print/write
 		//the toString for each album.
 		if(mAddToAlbumBag){
-			printOutput(mAlbumBag.toStringConflictingAlbums());
+			//printOutput(mAlbumBag.toStringConflictingAlbums());
 		}
 		
 		
-		mAlbumBag.doStuffEachAlbum(mWriteToFile, mResultFile);
+		mAlbumBag.doStuffEachAlbum(mResultFile);
 		
 		//If we wrote to album bag and want to save it, then save it here
 		if(mAddToAlbumBag && mSaveAlbumBag){
@@ -201,16 +199,14 @@ public class Main {
 	private static void doStuffSong(Song mySong) throws IOException{
 		String operationResult = null;
 		
+		if(mySong.hasInvalidTrack()){
+			printOutput(mySong.toString() + "\n");
+		}
+		
 		/*
 		operationResult = mySong.findReplaceTag(FieldKey.GENRE, "Done", "|", false, true);
 		operationResult += mySong.findReplaceTag(FieldKey.GENRE, "done", "|", false, true);
 		
-		if(mWriteToFile){
-			mResultFile.write(operationResult);
-		}
-		else{
-			System.out.print(operationResult);
-		}
 		*/
 	}
 	
@@ -219,11 +215,10 @@ public class Main {
 	}
 	
 	private static void printOutput(String output) throws IOException{
-		if(mWriteToFile == true && mResultFile != null){
+		System.out.println(output);
+		
+		if(mResultFile != null){
 			mResultFile.write(output);
-		}
-		else{
-			System.out.println(output);
 		}
 	}
 

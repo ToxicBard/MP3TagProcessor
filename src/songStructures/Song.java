@@ -154,6 +154,37 @@ public class Song {
 		return this.getArtist() + " - " + this.getAlbum() + ", " + this.getTrack() + " - " + this.getTitle();
 	}
 	
+	private boolean hasTrack(){
+		return !this.getTrack().trim().isEmpty();
+	}
+	
+	private int getTrackAsInt(){
+		return CommonTools.intParse(this.getTrack());
+	}
+	
+	public boolean hasInvalidTrack(){
+		if(this.hasTrack() && this.getTrackAsInt() == 0){
+			return true;
+		}
+		return false;
+	}
+	
+	/*
+	public String renameByTag(boolean commit){
+		int trackNumber = this.getTrackAsInt();
+		String trackNumberAsString = trackNumber + "";
+		String fileExtension = mAudioFile.getFile().
+		
+		if(trackNumber == 0){
+			CommonTools.processError("Invalid Track Number");
+		}
+		
+		if(trackNumber > 0 && trackNumber <= 9){
+			trackNumberAsString = "0" + trackNumber;
+		}
+	}
+	*/
+	
 	public void doStuff(){
 		//Do stuff
 	}

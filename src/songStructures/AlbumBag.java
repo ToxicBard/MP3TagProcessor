@@ -58,9 +58,9 @@ public class AlbumBag implements Serializable {
 		return toReturn;
 	}
 	
-	public void doStuffEachAlbum(boolean writeToFile, BufferedWriter fileOut){
+	public void doStuffEachAlbum(BufferedWriter fileOut){
 		for(Album loopAlbum : mAlbums){
-			loopAlbum.doStuffAlbum(writeToFile, fileOut);
+			loopAlbum.doStuffAlbum(fileOut);
 		}
 	}
 	
