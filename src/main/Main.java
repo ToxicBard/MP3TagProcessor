@@ -45,7 +45,7 @@ public class Main {
 	
 	/*
 	 * 
-	 * TODO Implement packed/unpacked Songs
+	 * TODO Implement SongInfo
 	 * TODO Clean up albums with multiple discnumbers
 	 * TODO Implement renameByTag on a per-album basis, rather than on a per-song basis
 	 * 
