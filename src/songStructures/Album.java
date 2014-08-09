@@ -69,9 +69,8 @@ public class Album implements Serializable {
 			mAlbumYears.add(songYear);
 		}
 		
-		//Add the year to the years list if it's not already there
 		if(!mDiscNumbers.contains(songDiscNumber)){
-			mDiscNumbers.add(songYear);
+			mDiscNumbers.add(songDiscNumber);
 		}
 		
 		if(!mAlbumDirectories.contains(songDirectory)){
