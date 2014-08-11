@@ -203,7 +203,7 @@ public class Main {
 	private static void doStuffSong(Song mySong) throws IOException{
 		String operationResult;
 		
-		operationResult = mySong.doCommonReplacements(true);
+		operationResult = mySong.doCommonReplacements(false);
 		
 		printOutput(operationResult);
 	}
