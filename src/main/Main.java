@@ -114,7 +114,7 @@ public class Main {
 		//If we were adding to the album bag, then print/write
 		//the toString for each album.
 		if(mAddToAlbumBag){
-			printOutput(mAlbumBag.toStringConflictingAlbums());
+			//printOutput(mAlbumBag.toStringConflictingAlbums());
 		}
 		
 		
@@ -201,12 +201,11 @@ public class Main {
 	 * This should get called for every valid audio file
 	 */
 	private static void doStuffSong(Song mySong) throws IOException{
+		String operationResult;
 		
-		/*
-		operationResult = mySong.findReplaceTag(FieldKey.GENRE, "Done", "|", false, true);
-		operationResult += mySong.findReplaceTag(FieldKey.GENRE, "done", "|", false, true);
+		operationResult = mySong.doCommonReplacements(false);
 		
-		*/
+		printOutput(operationResult);
 	}
 	
 	private static void doStuffFolder(File myFolder){

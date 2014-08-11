@@ -249,6 +249,22 @@ public class Song {
 		return toReturn;
 	}
 	
+	public String doCommonReplacements(boolean commit){
+		String operationResult;
+		
+		//Title comparisons
+		operationResult = this.findReplaceTag(FieldKey.TITLE, "(Album Version)", "", false, commit);
+		operationResult += this.findReplaceTag(FieldKey.TITLE, "(Lp Version)", "", false, commit);
+		operationResult += this.findReplaceTag(FieldKey.TITLE, "(Remastered)", "", false, commit);
+		operationResult += this.trimTag(FieldKey.TITLE, commit);
+		
+		//Album comparisons
+		operationResult += this.findReplaceTag(FieldKey.ALBUM, "(Remastered)", "", false, commit);
+		operationResult += this.trimTag(FieldKey.ALBUM, commit);
+		
+		return operationResult;
+	}
+	
 	
 	public void doStuff(){
 		//Do stuff
