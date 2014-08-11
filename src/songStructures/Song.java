@@ -256,6 +256,7 @@ public class Song {
 		operationResult = this.findReplaceTag(FieldKey.TITLE, "(Album Version)", "", false, commit);
 		operationResult += this.findReplaceTag(FieldKey.TITLE, "(Lp Version)", "", false, commit);
 		operationResult += this.findReplaceTag(FieldKey.TITLE, "(Remastered)", "", false, commit);
+		operationResult += this.findReplaceTag(FieldKey.TITLE, "(Remastered Version)", "", false, commit);
 		operationResult += this.trimTag(FieldKey.TITLE, commit);
 		
 		//Album comparisons
