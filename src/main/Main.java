@@ -204,7 +204,7 @@ public class Main {
 		String operationResult;
 		
 		//operationResult = mySong.doCommonReplacements(false);
-		operationResult = mySong.splitTagNumber("/", false);
+		operationResult = mySong.removeTag(FieldKey.TRACK_TOTAL, true);
 		
 		printOutput(operationResult);
 	}

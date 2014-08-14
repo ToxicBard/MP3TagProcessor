@@ -180,22 +180,18 @@ public class Song {
 		return false;
 	}
 	
-	public String splitTagNumber(String delim, boolean commit){
-		String trackNumberTag = this.getTrack();
-		String replaceTrackNumber;
+	public String removeTag(FieldKey removeTagKey, boolean commit){
+		String removeTag = mTag.getFirst(removeTagKey);
 		String toReturn = "";
-		int delimIndex;
 		
-		if(trackNumberTag.contains(delim)){
-			delimIndex = trackNumberTag.indexOf(delim);
-			replaceTrackNumber = trackNumberTag.substring(0,  delimIndex);
-			toReturn = replaceTrackNumber + "\n";
+		if(removeTag.trim().length() > 0){
+			toReturn = removeTag + "\n";
 			
 			if(commit){
 				try {
-					mTag.setField(FieldKey.TRACK, replaceTrackNumber);
+					mTag.deleteField(removeTagKey);
 					mAudioFile.commit();
-				} catch (CannotWriteException | KeyNotFoundException | FieldDataInvalidException e) {
+				} catch (CannotWriteException | KeyNotFoundException e) {
 					CommonTools.processError("Error writing tag for " + this.toString());
 				}
 			}
