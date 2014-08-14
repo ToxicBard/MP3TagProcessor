@@ -203,7 +203,8 @@ public class Main {
 	private static void doStuffSong(Song mySong) throws IOException{
 		String operationResult;
 		
-		operationResult = mySong.doCommonReplacements(false);
+		//operationResult = mySong.doCommonReplacements(false);
+		operationResult = mySong.splitTagNumber("/", false);
 		
 		printOutput(operationResult);
 	}
